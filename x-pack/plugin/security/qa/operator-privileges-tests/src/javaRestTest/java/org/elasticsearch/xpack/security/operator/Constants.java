@@ -457,6 +457,7 @@ public class Constants {
         "indices:data/write/bulk_shard_operations[s]",
         "indices:data/write/delete",
         "indices:data/write/delete/byquery",
+        "indices:data/write/ent-search-encrypt",
         "indices:data/write/index",
         "indices:data/write/reindex",
         "indices:data/write/update",
