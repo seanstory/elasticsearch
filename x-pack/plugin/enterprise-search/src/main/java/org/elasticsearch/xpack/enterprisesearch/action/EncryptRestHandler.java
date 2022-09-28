@@ -15,6 +15,9 @@ import org.elasticsearch.client.internal.node.NodeClient;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
+import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.rest.action.RestStatusToXContentListener;
+import org.elasticsearch.xcontent.XContentBuilder;
 import org.elasticsearch.xcontent.XContentType;
 
 import java.io.IOException;
@@ -43,29 +46,13 @@ public class EncryptRestHandler extends BaseRestHandler {
     @Override
     protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) throws IOException {
 
-        String index = request.param("index");
-        String id = request.param("id");
+        EncryptRequest encryptRequest = new EncryptRequest();
+        encryptRequest.setIndex(request.param("index"));
+        encryptRequest.setId(request.param("id"));
         Map<String, Object> body = request.contentParser().map();
-        String field = (String) body.get("field");
-        String value = (String) body.get("value");
+        encryptRequest.setField((String) body.get("field"));
+        encryptRequest.setValue((String) body.get("value"));
 
-        return channel -> {
-            try {
-                // encrypt the value
-                String encryptedValue = "WOAH_'"+value+"'_IT_IS_ENCRYPTED"; // TODO
-
-                // update the document's field
-                Map<String, String> jsonMap = new HashMap<>();
-                jsonMap.put(field, encryptedValue);
-
-                UpdateRequest updateRequest = new UpdateRequest(index, id).upsert(jsonMap);
-                UpdateResponse updateResponse = client.update(updateRequest).actionGet();
-
-                channel.sendResponse(new RestResponse(updateResponse.status(), updateResponse.getResult().toString()));
-            } catch (final Exception e) {
-                logger.error("Failed encryption", e);
-                channel.sendResponse(new RestResponse(channel, e));
-            }
-        };
+        return channel -> client.execute(EncryptAction.INSTANCE, encryptRequest, new RestStatusToXContentListener<>(channel));
     }
 }

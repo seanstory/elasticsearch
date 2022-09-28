@@ -8,6 +8,8 @@
 
 package org.elasticsearch.xpack.enterprisesearch;
 
+import org.elasticsearch.action.ActionRequest;
+import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNodes;
 import org.elasticsearch.common.settings.ClusterSettings;
@@ -18,7 +20,9 @@ import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
+import org.elasticsearch.xpack.enterprisesearch.action.EncryptAction;
 import org.elasticsearch.xpack.enterprisesearch.action.EncryptRestHandler;
+import org.elasticsearch.xpack.enterprisesearch.action.TransportEncryptAction;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -38,6 +42,13 @@ public class EnterpriseSearchPlugin extends Plugin implements ActionPlugin {
 
         return singletonList(
             new EncryptRestHandler()
+        );
+    }
+
+    @Override
+    public List<ActionHandler<? extends ActionRequest, ? extends ActionResponse>> getActions() {
+        return singletonList(
+            new ActionHandler<>(EncryptAction.INSTANCE, TransportEncryptAction.class)
         );
     }
 }
