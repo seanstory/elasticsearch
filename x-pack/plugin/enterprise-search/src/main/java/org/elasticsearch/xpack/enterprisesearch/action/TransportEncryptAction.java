@@ -49,7 +49,7 @@ public class TransportEncryptAction extends HandledTransportAction<EncryptReques
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put(request.getField(), encryptedValue);
 
-        UpdateRequest updateRequest = new UpdateRequest(request.getIndex(), request.getId()).doc(jsonMap);
+        UpdateRequest updateRequest = new UpdateRequest(request.getIndex(), request.getId()).doc(jsonMap).docAsUpsert(true);
         logger.info("Made the request");
         client.update(updateRequest, listener.delegateFailure((l, updateResponse) -> {
             try {
