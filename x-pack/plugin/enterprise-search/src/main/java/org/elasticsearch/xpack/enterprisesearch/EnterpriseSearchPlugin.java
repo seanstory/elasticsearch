@@ -17,6 +17,7 @@ import org.elasticsearch.common.settings.IndexScopedSettings;
 import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.SettingsFilter;
+import org.elasticsearch.indices.SystemIndexDescriptor;
 import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.plugins.SystemIndexPlugin;
@@ -28,8 +29,11 @@ import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptTransportA
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptAction;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptRestHandler;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptTransportAction;
+import org.elasticsearch.xpack.enterprisesearch.index.ConnectorIndex;
+import org.elasticsearch.xpack.enterprisesearch.index.SyncJobIndex;
 import org.elasticsearch.xpack.enterprisesearch.setting.EntSearchField;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -75,5 +79,33 @@ public class EnterpriseSearchPlugin extends Plugin implements SystemIndexPlugin 
     @Override
     public String getFeatureDescription() {
         return DESCRIPTION;
+    }
+
+    @Override
+    public Collection<SystemIndexDescriptor> getSystemIndexDescriptors(Settings settings) {
+        SystemIndexDescriptor connectorsIndex = SystemIndexDescriptor.builder()
+            .setIndexPattern(".elastic-connectors-v*")
+            .setDescription("State of individual connectors")
+            .setType(SystemIndexDescriptor.Type.INTERNAL_MANAGED)
+            .setPrimaryIndex(".elastic-connectors-v1")
+            .setAliasName(".elastic-connectors")
+            .setMappings(ConnectorIndex.MAPPING_JSON)
+            .setSettings(SyncJobIndex.SETTINGS)
+            .setVersionMetaKey("es-version")
+            .setOrigin(FEATURE_NAME)
+            .build();
+        SystemIndexDescriptor syncJobsIndex = SystemIndexDescriptor.builder()
+            .setIndexPattern(".elastic-connectors-sync-jobs-v*")
+            .setDescription("History/log of connector sync jobs")
+            .setType(SystemIndexDescriptor.Type.INTERNAL_MANAGED)
+            .setPrimaryIndex(".elastic-connectors-sync-jobs-v1")
+            .setAliasName(".elastic-connectors-sync-jobs")
+            .setMappings(SyncJobIndex.MAPPING_JSON)
+            .setSettings(SyncJobIndex.SETTINGS)
+            .setVersionMetaKey("es-version")
+            .setOrigin(FEATURE_NAME)
+            .build();
+
+        return List.of(connectorsIndex, syncJobsIndex);
     }
 }
