@@ -7,8 +7,6 @@
 
 package org.elasticsearch.xpack.enterprisesearch.action.encrypt;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.elasticsearch.client.internal.node.NodeClient;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.RestRequest;
@@ -22,11 +20,9 @@ import static org.elasticsearch.rest.RestRequest.Method.POST;
 
 public class EncryptRestHandler extends BaseRestHandler {
 
-    protected Logger logger = LogManager.getLogger(getClass());
-
     @Override
     public String getName() {
-        return "rest_ent_search_action";
+        return "rest_ent_search_encrypt";
     }
 
     @Override

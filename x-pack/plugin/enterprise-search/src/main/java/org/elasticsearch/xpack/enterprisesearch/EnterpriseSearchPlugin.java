@@ -21,9 +21,12 @@ import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
+import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptAction;
+import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptRestHandler;
+import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptTransportAction;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptAction;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptRestHandler;
-import org.elasticsearch.xpack.enterprisesearch.action.encrypt.TransportEncryptAction;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptTransportAction;
 import org.elasticsearch.xpack.enterprisesearch.setting.EntSearchField;
 
 import java.util.List;
@@ -42,15 +45,17 @@ public class EnterpriseSearchPlugin extends Plugin implements ActionPlugin {
                                              final IndexNameExpressionResolver indexNameExpressionResolver,
                                              final Supplier<DiscoveryNodes> nodesInCluster) {
 
-        return singletonList(
-            new EncryptRestHandler()
+        return List.of(
+            new EncryptRestHandler(),
+            new DecryptRestHandler()
         );
     }
 
     @Override
     public List<ActionHandler<? extends ActionRequest, ? extends ActionResponse>> getActions() {
-        return singletonList(
-            new ActionHandler<>(EncryptAction.INSTANCE, TransportEncryptAction.class)
+        return List.of(
+            new ActionHandler<>(EncryptAction.INSTANCE, EncryptTransportAction.class),
+            new ActionHandler<>(DecryptAction.INSTANCE, DecryptTransportAction.class)
         );
     }
 

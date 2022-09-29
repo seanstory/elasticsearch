@@ -423,6 +423,7 @@ public class Constants {
         "indices:data/read/async_search/get",
         "indices:data/read/async_search/submit",
         "indices:data/read/close_point_in_time",
+        "indices:data/read/ent-search-decrypt",
         "indices:data/read/eql",
         "indices:data/read/eql/async/get",
         "indices:data/read/explain",

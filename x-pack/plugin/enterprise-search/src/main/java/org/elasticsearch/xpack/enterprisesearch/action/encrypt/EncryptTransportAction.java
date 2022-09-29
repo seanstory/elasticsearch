@@ -25,14 +25,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class TransportEncryptAction extends HandledTransportAction<EncryptRequest, EncryptResponse> {
+public class EncryptTransportAction extends HandledTransportAction<EncryptRequest, EncryptResponse> {
 
     protected Logger logger = LogManager.getLogger(getClass());
     private final NodeClient client;
     private final CryptoService cryptoService;
 
     @Inject
-    public TransportEncryptAction(TransportService transportService, ActionFilters actionFilters, NodeClient client) {
+    public EncryptTransportAction(TransportService transportService, ActionFilters actionFilters, NodeClient client) {
         super(EncryptAction.NAME, transportService, actionFilters, EncryptRequest::new);
         this.client = client;
         this.cryptoService = new CryptoService(client.settings());

@@ -14,6 +14,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.test.ESIntegTestCase;
+import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptAction;
+import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptRequest;
+import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptResponse;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptAction;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptRequest;
 import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptResponse;
@@ -74,5 +77,13 @@ public class EnterpriseSearchPluginIT extends ESIntegTestCase {
         GetResponse getResponse = client().prepareGet().setIndex(index).setId(id).get();
         Map<String, Object> source = getResponse.getSource();
         assertTrue(((String) source.get(field)).startsWith(CryptoService.ENCRYPTED_TEXT_PREFIX));
+
+        //decrypt it
+        DecryptRequest decryptRequest = new DecryptRequest();
+        decryptRequest.setIndex(index);
+        decryptRequest.setId(id);
+        decryptRequest.setField(field);
+        DecryptResponse decryptResponse = client().execute(DecryptAction.INSTANCE, decryptRequest).get();
+        assertEquals(decryptResponse.getValue(), value);
     }
 }
