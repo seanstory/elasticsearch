@@ -7,7 +7,7 @@
  * 2.0.
  */
 
-package org.elasticsearch.xpack.enterprisesearch.action;
+package org.elasticsearch.xpack.enterprisesearch.action.encrypt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

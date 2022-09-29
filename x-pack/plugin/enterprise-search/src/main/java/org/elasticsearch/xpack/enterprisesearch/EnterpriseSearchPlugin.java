@@ -21,12 +21,11 @@ import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
-import org.elasticsearch.xpack.enterprisesearch.action.EncryptAction;
-import org.elasticsearch.xpack.enterprisesearch.action.EncryptRestHandler;
-import org.elasticsearch.xpack.enterprisesearch.action.TransportEncryptAction;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptAction;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptRestHandler;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.TransportEncryptAction;
 import org.elasticsearch.xpack.enterprisesearch.setting.EntSearchField;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 

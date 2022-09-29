@@ -8,31 +8,23 @@
 package org.elasticsearch.xpack.enterprisesearch;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
-import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.common.settings.MockSecureSettings;
-import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.test.ESIntegTestCase;
-import org.elasticsearch.test.client.RandomizingClient;
-import org.elasticsearch.xpack.enterprisesearch.action.EncryptAction;
-import org.elasticsearch.xpack.enterprisesearch.action.EncryptRequest;
-import org.elasticsearch.xpack.enterprisesearch.action.EncryptResponse;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptAction;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptRequest;
+import org.elasticsearch.xpack.enterprisesearch.action.encrypt.EncryptResponse;
 import org.elasticsearch.xpack.enterprisesearch.crypto.CryptoService;
 import org.elasticsearch.xpack.enterprisesearch.setting.EntSearchField;
-import org.junit.After;
-import org.junit.Before;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
-import static org.junit.Assert.*;
 
 
 @ESIntegTestCase.ClusterScope(scope = ESIntegTestCase.Scope.TEST, numDataNodes = 0)

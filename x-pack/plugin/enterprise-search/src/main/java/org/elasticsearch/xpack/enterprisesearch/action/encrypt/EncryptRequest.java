@@ -7,7 +7,7 @@
  * 2.0.
  */
 
-package org.elasticsearch.xpack.enterprisesearch.action;
+package org.elasticsearch.xpack.enterprisesearch.action.encrypt;
 
 import org.elasticsearch.action.ActionRequest;
 import org.elasticsearch.action.ActionRequestValidationException;
