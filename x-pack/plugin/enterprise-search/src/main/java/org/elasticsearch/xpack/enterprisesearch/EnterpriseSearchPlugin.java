@@ -14,6 +14,7 @@ import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNodes;
 import org.elasticsearch.common.settings.ClusterSettings;
 import org.elasticsearch.common.settings.IndexScopedSettings;
+import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.SettingsFilter;
 import org.elasticsearch.plugins.ActionPlugin;
@@ -23,7 +24,9 @@ import org.elasticsearch.rest.RestHandler;
 import org.elasticsearch.xpack.enterprisesearch.action.EncryptAction;
 import org.elasticsearch.xpack.enterprisesearch.action.EncryptRestHandler;
 import org.elasticsearch.xpack.enterprisesearch.action.TransportEncryptAction;
+import org.elasticsearch.xpack.enterprisesearch.setting.EntSearchField;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -50,5 +53,10 @@ public class EnterpriseSearchPlugin extends Plugin implements ActionPlugin {
         return singletonList(
             new ActionHandler<>(EncryptAction.INSTANCE, TransportEncryptAction.class)
         );
+    }
+
+    @Override
+    public List<Setting<?>> getSettings() {
+        return singletonList(EntSearchField.ENCRYPTION_KEY_SETTING);
     }
 }

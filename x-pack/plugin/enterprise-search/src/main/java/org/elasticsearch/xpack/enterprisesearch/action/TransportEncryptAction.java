@@ -19,6 +19,7 @@ import org.elasticsearch.client.internal.node.NodeClient;
 import org.elasticsearch.tasks.Task;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.transport.TransportService;
+import org.elasticsearch.xpack.enterprisesearch.crypto.CryptoService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +29,13 @@ public class TransportEncryptAction extends HandledTransportAction<EncryptReques
 
     protected Logger logger = LogManager.getLogger(getClass());
     private final NodeClient client;
+    private final CryptoService cryptoService;
 
     @Inject
     public TransportEncryptAction(TransportService transportService, ActionFilters actionFilters, NodeClient client) {
         super(EncryptAction.NAME, transportService, actionFilters, EncryptRequest::new);
         this.client = client;
+        this.cryptoService = new CryptoService(client.settings());
     }
 
     @Override
@@ -40,7 +43,7 @@ public class TransportEncryptAction extends HandledTransportAction<EncryptReques
         final EncryptResponse encryptResponse = new EncryptResponse();
 
         // encrypt the value
-        String encryptedValue = "WOAH_'"+request.getValue()+"'_IT_IS_ENCRYPTED"; // TODO
+        String encryptedValue = new String(cryptoService.encrypt(request.getValue().toCharArray()));
 
         // update the document's field
         Map<String, Object> jsonMap = new HashMap<>();
@@ -52,8 +55,11 @@ public class TransportEncryptAction extends HandledTransportAction<EncryptReques
             try {
                 encryptResponse.setUpdateResponse(updateResponse);
                 l.onResponse(encryptResponse);
+                logger.info("Successfully responded to encrypt request");
             } catch (Throwable t) {
-                l.onFailure(new Exception("Encrypt task failed.", t));
+                Exception e = new Exception("Encrypt task failed.", t);
+                logger.error("Failed to encrypt.", e);
+                l.onFailure(e);
             }
         }));
     }
