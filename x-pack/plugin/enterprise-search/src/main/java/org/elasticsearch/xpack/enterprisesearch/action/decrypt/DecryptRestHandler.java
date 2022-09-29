@@ -16,7 +16,7 @@ import org.elasticsearch.rest.action.RestStatusToXContentListener;
 
 import java.util.List;
 
-import static org.elasticsearch.rest.RestRequest.Method.POST;
+import static org.elasticsearch.rest.RestRequest.Method.GET;
 
 public class DecryptRestHandler extends BaseRestHandler {
 
@@ -28,7 +28,7 @@ public class DecryptRestHandler extends BaseRestHandler {
     @Override
     public List<Route> routes() {
         return List.of(
-            new Route(POST, "_decrypt/{index}/{id}/{field}")
+            new Route(GET, "_decrypt/{index}/{id}/{field}")
         );
     }
 

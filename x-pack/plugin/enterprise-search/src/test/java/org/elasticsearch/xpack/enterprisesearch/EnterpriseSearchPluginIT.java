@@ -9,6 +9,7 @@ package org.elasticsearch.xpack.enterprisesearch;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.common.settings.MockSecureSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugins.Plugin;
@@ -25,6 +26,7 @@ import org.elasticsearch.xpack.enterprisesearch.setting.EntSearchField;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -63,6 +65,10 @@ public class EnterpriseSearchPluginIT extends ESIntegTestCase {
         internalCluster().startNodes(Settings.EMPTY);
         CreateIndexResponse res = client().admin().indices().prepareCreate(index).get();
         assertTrue(res.isAcknowledged());
+        Map<String, Object> sourceDoc = new HashMap<>();
+        sourceDoc.put("other_key", "other_value");
+        IndexResponse indexRes = client().prepareIndex().setIndex(index).setId(id).setSource(sourceDoc).get();
+        assertEquals(indexRes.status(), RestStatus.CREATED);
 
         //make an encryption request
         EncryptRequest encryptRequest = new EncryptRequest();
@@ -71,7 +77,7 @@ public class EnterpriseSearchPluginIT extends ESIntegTestCase {
         encryptRequest.setField(field);
         encryptRequest.setValue(value);
         EncryptResponse response = client().execute(EncryptAction.INSTANCE, encryptRequest).get();
-        assertEquals(response.status(), RestStatus.CREATED);
+        assertEquals(response.status(), RestStatus.OK);
 
         //check that the value is encrypted
         GetResponse getResponse = client().prepareGet().setIndex(index).setId(id).get();
