@@ -19,6 +19,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.SettingsFilter;
 import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.Plugin;
+import org.elasticsearch.plugins.SystemIndexPlugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 import org.elasticsearch.xpack.enterprisesearch.action.decrypt.DecryptAction;
@@ -34,7 +35,9 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 
-public class EnterpriseSearchPlugin extends Plugin implements ActionPlugin {
+public class EnterpriseSearchPlugin extends Plugin implements SystemIndexPlugin {
+    public static final String FEATURE_NAME = "Enterprise Search Connectors";
+    public static final String DESCRIPTION = "The state and metadata surrounding registered connectors and their sync jobs";
 
     @Override
     public List<RestHandler> getRestHandlers(final Settings settings,
@@ -62,5 +65,15 @@ public class EnterpriseSearchPlugin extends Plugin implements ActionPlugin {
     @Override
     public List<Setting<?>> getSettings() {
         return singletonList(EntSearchField.ENCRYPTION_KEY_SETTING);
+    }
+
+    @Override
+    public String getFeatureName() {
+        return FEATURE_NAME;
+    }
+
+    @Override
+    public String getFeatureDescription() {
+        return DESCRIPTION;
     }
 }
